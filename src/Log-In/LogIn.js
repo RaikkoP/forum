@@ -3,7 +3,7 @@ import "./LogIn.css";
 import "./LogInAnimation.css";
 import Logo from "../Images/logo.png";
 import axios from "axios";
-import { USER_REGEX, PASSWORD_REGEX } from "../REGEX/Regex"
+import { USER_REGEX, PASSWORD_REGEX } from "../REGEX/Regex";
 
 const LogIn = () => {
   //UseStates and useEffects
@@ -22,20 +22,22 @@ const LogIn = () => {
   const [validMatch, setValidMatch] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
 
-
-  const [loginStatus, setLoginStatus] = useState("Login");
+  const [loginType, setLoginType] = useState("Login");
+  const [loginStatus, setLoginStatus] = useState(false);
   const [error, setError] = useState("");
 
+
+  //Registration Handling
   useEffect(() => {
     userRef.current.focus();
-  }, [])
+  }, []);
 
   useEffect(() => {
     const result = USER_REGEX.test(username);
     console.log(result);
     console.log(username);
     setValidUsername(result);
-  },[username])
+  }, [username]);
 
   useEffect(() => {
     const result = PASSWORD_REGEX.test(password);
@@ -44,12 +46,11 @@ const LogIn = () => {
     setValidPassword(result);
     const match = password === matchPassword;
     setValidMatch(match);
-  }, [password, matchPassword])
+  }, [password, matchPassword]);
 
   useEffect(() => {
-    setError('');
-  }, [username, password, matchPassword])
-
+    setError("");
+  }, [username, password, matchPassword]);
 
   //Backend
   const handleLogin = (event) => {
@@ -57,7 +58,19 @@ const LogIn = () => {
     console.log(password);
     axios
       .post("/login", { username, password })
-      .then((res) => console.log(res))
+      .then(
+        (res) => {
+          console.log(res)
+          res.data.map((data) => {
+            if(data.USERNAME === username && data.PASSWORD === password){
+              //Change with prop later
+              setLoginStatus(true)
+              console.log(data.USERNAME)
+              console.log(loginStatus)
+            }
+            return loginStatus
+          })
+        })
       .catch((err) => console.log(err));
     setUsername("");
     setPassword("");
@@ -74,18 +87,17 @@ const LogIn = () => {
     setUsername("");
     setPassword("");
     event.preventDefault();
-  }
-
+  };
 
   return (
     <div className="LogIn-box">
       <div className="float-left">
         <div className="input-fields">
           <h1>Welcome!</h1>
-          {loginStatus === "Login" && (
+          {loginType === "Login" && (
             <div>
               <form>
-                <label for="username">Username</label>
+                <label for="username">Username:</label>
                 <input
                   ref={userRef}
                   value={username}
@@ -94,7 +106,7 @@ const LogIn = () => {
                   id="username"
                   name="username"
                 ></input>
-                <label for="password">Password</label>
+                <label for="password">Password:</label>
                 <input
                   ref={userRef}
                   type="password"
@@ -103,24 +115,26 @@ const LogIn = () => {
                   id="password"
                   name="password"
                 ></input>
-                <input
-                  onClick={handleLogin}
-                  type="button"
-                  value="Log-in"
-                ></input>
-              </form>
-              <div className="buttons">
-                <button onClick={() => setLoginStatus('Register')}>Register</button>
+                <button onClick={handleLogin}>Log-in</button>
+                <button onClick={() => setLoginType("Register")}>
+                  Register
+                </button>
                 <br></br>
                 <button>Continue as Guest</button>
-              </div>
+              </form>
             </div>
           )}
-          {loginStatus === "Register" && (
+          {loginType === "Register" && (
             <div>
-              <p ref={errRef} arial-live="assertive">{error}</p>
               <form>
-                <label htmlFor="username">
+                <label
+                  htmlFor="username"
+                  className={
+                    userFocus && username && validUsername
+                      ? "correct-input"
+                      : ""
+                  }
+                >
                   Username:
                 </label>
                 <input
@@ -138,16 +152,28 @@ const LogIn = () => {
                 ></input>
                 <p
                   id="uidnote"
-                  className={userFocus && username && !validUsername ? "instructions" : "offscreen"}>
+                  className={
+                    userFocus && username && !validUsername
+                      ? "instructions"
+                      : "offscreen"
+                  }
+                >
                   4 to 24 characters.<br></br>
                   Must being with a letter.<br></br>
                   Letters, numbers, undserscores, hyphens allowed.
                 </p>
-                <label htmlFor="password">
+                <label
+                  htmlFor="password"
+                  className={
+                    passwordFocus && password && validPassword
+                      ? "correct-input"
+                      : ""
+                  }
+                >
                   Password:
                 </label>
                 <input
-                  type="password" 
+                  type="password"
                   value={password}
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
@@ -159,16 +185,31 @@ const LogIn = () => {
                 ></input>
                 <p
                   id="pwdnote"
-                  className={passwordFocus && password && !validPassword ? "instructions" : "offscreen"}>
+                  className={
+                    passwordFocus && password && !validPassword
+                      ? "instructions"
+                      : "offscreen"
+                  }
+                >
                   8 to 24 characters.<br></br>
-                  Must include uppercase and lowercase letters, a number and a special
-                  character.<br></br>
-                  Allowed special character: <span arial-labe="exclamation mark">!</span>
-                  <span aria-label="at symbol">@</span><span aria-label="hastag">#</span>
-                  <span aria-label="dollar sign">$</span><span arial-label="precent"></span>
+                  Must include uppercase and lowercase letters, a number and a
+                  special character.<br></br>
+                  Allowed special character:{" "}
+                  <span arial-labe="exclamation mark">!</span>
+                  <span aria-label="at symbol">@</span>
+                  <span aria-label="hastag">#</span>
+                  <span aria-label="dollar sign">$</span>
+                  <span arial-label="precent"></span>
                 </p>
-                <label htmlFor="confirmPassword">
-                  Confirm Password
+                <label
+                  htmlFor="confirmPassword"
+                  className={
+                    matchFocus && matchPassword && validMatch
+                      ? "correct-input"
+                      : ""
+                  }
+                >
+                  Confirm Password:
                 </label>
                 <input
                   type="password"
@@ -182,19 +223,30 @@ const LogIn = () => {
                 ></input>
                 <p
                   id="confirmnote"
-                  className={matchFocus && !validMatch ? "instructions" :
-                  "offscreen"}>
+                  className={
+                    matchFocus && !validMatch ? "instructions" : "offscreen"
+                  }
+                >
                   Must match the first password input field.
                 </p>
-                <button onClick={handleRegister} disabled={!validUsername || !validPassword || !validMatch ? true : false}>
+                <button
+                  onClick={handleRegister}
+                  disabled={
+                    !validUsername || !validPassword || !validMatch
+                      ? true
+                      : false
+                  }
+                >
                   Sign up
                 </button>
-              </form>
-              <div className="buttons">
-                <button onClick={() => setLoginStatus('Login')}>Back to Login</button>
+                <button onClick={() => setLoginType("Login")}>
+                  Back to Login
+                </button>
+                <p ref={errRef} arial-live="assertive">
+                  {error}
+                </p>
                 <br></br>
-                <button>Continue as Guest</button>
-              </div>
+              </form>
             </div>
           )}
         </div>

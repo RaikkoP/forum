@@ -7,6 +7,21 @@ body{
     background-position: 52% 65%;
 }
 
+
+form button {
+    position: relative;
+    margin-top: 1rem;
+    margin-right: 5px;
+    margin-bottom: 1rem;
+    font-size: 18px;
+    padding: 10px;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 20%;
+    border: 1px solid;
+    z-index: 1;
+}
+
 :root {
     --clr-1: #fd004c;
     --clr-2: #fe9000;
@@ -61,23 +76,6 @@ body{
     float:right;
 }
 
-.buttons {
-  margin-top: 1em;
-  padding: 4em;
-}
-
-.buttons button{
-    position: relative;
-    margin: 10px;
-    font-size: 18px;
-    padding: 10px;
-    background: transparent;
-    cursor: pointer;
-    border-radius: 20%;
-    border: 1px solid;
-    z-index: 1;
-}
-
 .input-fields {
     padding: 4em;
     padding-bottom: 0;
@@ -103,4 +101,23 @@ body{
 .logo {
     width: 500px;
     height: 500px;
+}
+
+.offscreen {
+    display: none;
+}
+
+.instructions {
+    background-color: rgb(202,235,168);
+    color: rgb(73, 73, 73);
+    border-radius: 10%;
+    text-align: center;
+}
+
+.correct-input {
+    color: rgb(86, 212, 97)
+}
+
+.false-input {
+    color:#f71f5f;
 }

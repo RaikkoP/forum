@@ -2,9 +2,9 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 //User can consist of lower, upper, numbers and underscores
-export const USER_REGEX = /^[a-zA-Z][a-zA-z0-9-_]{3,23}$/;
+const USER_REGEX = /^[a-zA-Z][a-zA-z0-9-_]{3,23}$/;
 //password must contain one lwoer case, one upper case, one number, one symbol and must be 8-24 long
-export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const app = express();
 app.use(express.json());
@@ -30,7 +30,7 @@ app.post('/login', (req, res) => {
     db.query(sql, [req.body.username, req.body.password], (err, data)=>{
         if(err) return res.json(err);
         if(data.length > 0) {
-            return res.json("Login Succesfully")
+            return res.json(data)
         } else {
             return res.json("No account")
         }
