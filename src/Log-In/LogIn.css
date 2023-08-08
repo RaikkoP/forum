@@ -1,0 +1,106 @@
+body{
+    background: url(../Images/background.png);
+    background-color: grey;
+    background-blend-mode: multiply;
+    background-repeat: no-repeat;
+    background-size: fill;
+    background-position: 52% 65%;
+}
+
+:root {
+    --clr-1: #fd004c;
+    --clr-2: #fe9000;
+    --clr-3: #fff020;
+    --clr-4: #3edf4b;
+    --clr-5: #3363ff;
+    --clr-6: #b102b7;
+}
+
+/*Centers the Log-in Box*/
+.LogIn-box {
+    --border-width: 10px;
+    --border-radius: 10%;
+    border-radius: var(--border-radius);
+    border: solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: conic-gradient(
+        var(--clr-1),
+        var(--clr-2),
+        var(--clr-3),
+        var(--clr-4),
+        var(--clr-5),
+        var(--clr-6),
+        var(--clr-1)
+    );
+    transform: translate(-50%, -50%);
+    display: flex;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+    z-index: 1;
+}
+
+.LogIn-box::before {
+    content: '';
+    display: block;
+    height: calc(100% - calc(var(--border-width) * 2));
+    width: calc(100% - calc(var(--border-width) * 2));
+    background: rgba(240, 240, 240, 0.945);
+    position: absolute;
+    top:var(--border-width);
+    left:var(--border-width);
+    border-radius: calc(var(--border-radius) - var(--border-width));
+    z-index: -1;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float:right;
+}
+
+.buttons {
+  margin-top: 1em;
+  padding: 4em;
+}
+
+.buttons button{
+    position: relative;
+    margin: 10px;
+    font-size: 18px;
+    padding: 10px;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 20%;
+    border: 1px solid;
+    z-index: 1;
+}
+
+.input-fields {
+    padding: 4em;
+    padding-bottom: 0;
+}
+
+.input-fields h1{
+    padding-bottom: 25px;
+}
+
+.input-fields p {
+    margin-top: 15px;
+}
+
+.input-fields input {
+    background-color: transparent;
+    width: 16em;
+    padding: 5px;
+    margin-top: 10px;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.logo {
+    width: 500px;
+    height: 500px;
+}
