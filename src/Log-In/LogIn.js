@@ -5,7 +5,7 @@ import Logo from "../Images/logo.png";
 import axios from "axios";
 import { USER_REGEX, PASSWORD_REGEX } from "../REGEX/Regex";
 
-const LogIn = () => {
+const LogIn = (props) => {
   //UseStates and useEffects
   const userRef = useRef();
   const errRef = useRef();
@@ -23,7 +23,6 @@ const LogIn = () => {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [loginType, setLoginType] = useState("Login");
-  const [loginStatus, setLoginStatus] = useState(false);
   const [error, setError] = useState("");
 
 
@@ -48,32 +47,28 @@ const LogIn = () => {
     setValidMatch(match);
   }, [password, matchPassword]);
 
-  useEffect(() => {
-    setError("");
-  }, [username, password, matchPassword]);
-
-  //Backend
+  //Backend     
   const handleLogin = (event) => {
-    console.log(username);
-    console.log(password);
     axios
       .post("/login", { username, password })
       .then(
         (res) => {
-          console.log(res)
-          res.data.map((data) => {
-            if(data.USERNAME === username && data.PASSWORD === password){
-              //Change with prop later
-              setLoginStatus(true)
-              console.log(data.USERNAME)
-              console.log(loginStatus)
-            }
-            return loginStatus
-          })
-        })
-      .catch((err) => console.log(err));
+          if(res.data[0].USERNAME === username && res.data[0].PASSWORD === password) {
+            props.status(true);
+        }})
+      .catch((err) => {
+        console.log(err)
+      if (err.response.status === 409) {
+        setError('Please check if the username is correct, or register an account below');
+      } else if (err.response.status === 410) {
+        setError('Wrong password')
+      }else {
+        setError('Login failed');
+      }
+      })
     setUsername("");
     setPassword("");
+    setError("")
     event.preventDefault();
   };
 
@@ -122,6 +117,7 @@ const LogIn = () => {
                 <br></br>
                 <button>Continue as Guest</button>
               </form>
+              <p>{error}</p>
             </div>
           )}
           {loginType === "Register" && (
