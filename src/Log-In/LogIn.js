@@ -77,10 +77,24 @@ const LogIn = (props) => {
     console.log(password);
     axios
       .post("/register", { username, password })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then(
+        (res) => {
+          console.log(res)
+        })
+      .catch((err) => {
+        console.log(err)
+        if (err.response.status === 403) {
+          setError('Password does not meet the requirements');
+        } else if (err.response.status === 405) {
+          setError('Username does not meet the requirements');
+        } else {
+          setError('Problem with registration');
+        }
+      });
     setUsername("");
     setPassword("");
+    setMatchPassword("");
+    setError("");
     event.preventDefault();
   };
 
@@ -225,14 +239,14 @@ const LogIn = (props) => {
                 >
                   Must match the first password input field.
                 </p>
+                <p>{error}</p>
                 <button
                   onClick={handleRegister}
                   disabled={
                     !validUsername || !validPassword || !validMatch
                       ? true
                       : false
-                  }
-                >
+                  }>
                   Sign up
                 </button>
                 <button onClick={() => setLoginType("Login")}>

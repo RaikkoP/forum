@@ -47,11 +47,29 @@ app.post('/login', (req, res) => {
 //Still needs error handling
 app.post('/register', (req,res) => {
     const sql = "INSERT INTO USER_INFO (USERNAME,PASSWORD) VALUES (?,?)"
-    if(USER_REGEX.test(req.body.username) === true && PASSWORD_REGEX.test(req.body.password) === true){
-        db.query(sql, [req.body.username, req.body.password], (err, data)=>{
-            if(err) return res.json('Server has pushed back registration attempt');
-        })
-    } 
+    if(USER_REGEX.test(req.body.username) === true){
+        if(PASSWORD_REGEX.test(req.body.password) === true) {
+            db.query(sql, [req.body.username, req.body.password], (err, data)=>{
+                if(err) return res.json('Server has pushed back registration attempt');
+            })
+        } else {
+            return res.status(403).send()
+        } 
+    }  else {
+        return res.status(405).send()
+    }
+})
+
+app.get('/getuser', (req, res) => {
+    const sql = "SELECT * FROM USER_INFO WHERE USERNAME = ? AND PASSWORD = ?"
+    if(USER_REGEX.test(req.body.username) && PASSWORD_REGEX.test(req.body.password)) {
+        db.query(sql, [req.body.username, req.body.password]), (err, data) => {
+            if(data.length > 0){
+                return res.json(data.USERNAME), res.json(data.ID), res.json(data.ACCOUNT_TYPE),
+                res.json(data.USER_PROFILE_PIC), res.json(data.UPVOTES), res.json(data.DOWNVOTES)
+            }
+        }
+    }
 })
 
 app.listen(8081, ()=> {
