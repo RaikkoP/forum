@@ -24,6 +24,14 @@ app.get('/', (req, res) => {
     })
 })
 
+//Gather user informatio
+app.post('/userdata', (req, res) => {
+    const sql = "SELECT USERNAME, ID, ACCOUNT_TYPE, USER_BIO, USER_PROFILE_PIC, UPVOTES, DOWNVOTES FROM USER_INFO WHERE USERNAME = ? AND PASSWORD = ?"
+    db.query(sql, [req.body.username, req.body.password], (err, data)=>{
+        return res.json(data);
+    })
+})
+
 //Handles Login
 app.post('/login', (req, res) => {
     const sql = "SELECT * FROM USER_INFO WHERE USERNAME = ?";
@@ -60,17 +68,6 @@ app.post('/register', (req,res) => {
     }
 })
 
-app.get('/getuser', (req, res) => {
-    const sql = "SELECT * FROM USER_INFO WHERE USERNAME = ? AND PASSWORD = ?"
-    if(USER_REGEX.test(req.body.username) && PASSWORD_REGEX.test(req.body.password)) {
-        db.query(sql, [req.body.username, req.body.password]), (err, data) => {
-            if(data.length > 0){
-                return res.json(data.USERNAME), res.json(data.ID), res.json(data.ACCOUNT_TYPE),
-                res.json(data.USER_PROFILE_PIC), res.json(data.UPVOTES), res.json(data.DOWNVOTES)
-            }
-        }
-    }
-})
 
 app.listen(8081, ()=> {
     console.log("listening");

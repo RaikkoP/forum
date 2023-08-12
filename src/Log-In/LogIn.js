@@ -55,6 +55,8 @@ const LogIn = (props) => {
         (res) => {
           if(res.data[0].USERNAME === username && res.data[0].PASSWORD === password) {
             props.status(true);
+            props.username(username);
+            props.password(password);
         }})
       .catch((err) => {
         console.log(err)
