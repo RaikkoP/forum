@@ -26,9 +26,11 @@ app.get('/', (req, res) => {
 
 //Gather user informatio
 app.post('/userdata', (req, res) => {
-    const sql = "SELECT USERNAME, ID, ACCOUNT_TYPE, USER_BIO, USER_PROFILE_PIC, UPVOTES, DOWNVOTES FROM USER_INFO WHERE USERNAME = ? AND PASSWORD = ?"
+    const sql = "SELECT * FROM USER_INFO WHERE USERNAME = ? AND PASSWORD = ?"
     db.query(sql, [req.body.username, req.body.password], (err, data)=>{
-        return res.json(data);
+        if(data.length > 0) {
+            return res.json(data);
+        }
     })
 })
 

@@ -1,0 +1,27 @@
+#profile {
+    padding: 10px;
+    margin: 1em;
+    border-radius: 25%;
+}
+#profile2 {
+    padding-left: 11px;
+    padding-right: 11px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 1em;
+    border-radius: 25%;
+}
+
+#profile:hover {
+    background-color: rgb(214, 214, 214);
+    cursor: pointer;
+}
+
+#profile2:hover {
+    background-color: rgb(214, 214, 214);
+    cursor: pointer;
+}
+
+.info h1 {
+    margin-left: 20px;
+}
