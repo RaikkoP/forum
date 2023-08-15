@@ -4,6 +4,7 @@ import "./LogInAnimation.css";
 import Logo from "../Images/logo.png";
 import axios from "axios";
 import { USER_REGEX, PASSWORD_REGEX } from "../REGEX/Regex";
+import bcrypt from "bcryptjs";
 
 const LogIn = (props) => {
   //UseStates and useEffects
@@ -25,6 +26,7 @@ const LogIn = (props) => {
   const [loginType, setLoginType] = useState("Login");
   const [error, setError] = useState("");
 
+  const [hash, setHash] = useState("");
 
   //Registration Handling
   useEffect(() => {
@@ -47,50 +49,58 @@ const LogIn = (props) => {
     setValidMatch(match);
   }, [password, matchPassword]);
 
-  //Backend     
+  //Backend
   const handleLogin = (event) => {
     axios
       .post("/login", { username, password })
-      .then(
-        (res) => {
-          if(res.data[0].USERNAME === username && res.data[0].PASSWORD === password) {
-            props.status(true);
-            props.username(username);
-            props.password(password);
-        }})
-      .catch((err) => {
-        console.log(err)
-      if (err.response.status === 409) {
-        setError('Please check if the username is correct, or register an account below');
-      } else if (err.response.status === 410) {
-        setError('Wrong password')
-      }else {
-        setError('Login failed');
-      }
+      .then((res) => {
+        if (
+          res.data[0].USERNAME === username
+        ) {
+          props.status(true);
+          props.username(username);
+          props.password(password);
+        }
       })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 409) {
+          setError(
+            "Please check if the username is correct, or register an account below"
+          );
+        } else if (err.response.status === 410) {
+          setError("Wrong password");
+        } else {
+          setError("Login failed");
+        }
+      });
     setUsername("");
     setPassword("");
-    setError("")
+    setError("");
     event.preventDefault();
   };
 
   const handleRegister = (event) => {
     console.log(username);
     console.log(password);
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    console.log(hashedPassword);
     axios
-      .post("/register", { username, password })
-      .then(
-        (res) => {
-          console.log(res)
-        })
+      .post("/register", { username, password, hashedPassword })
+      .then((res) => {
+        console.log(res);
+      })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         if (err.response.status === 403) {
-          setError('Password does not meet the requirements');
+          setError("Password does not meet the requirements");
         } else if (err.response.status === 405) {
-          setError('Username does not meet the requirements');
-        } else {
-          setError('Problem with registration');
+          setError("Username does not meet the requirements");
+        } else if (err.response.status === 409) { 
+          setError("Username already exists");
+        } 
+        else {
+          setError("Problem with registration");
         }
       });
     setUsername("");
@@ -248,7 +258,8 @@ const LogIn = (props) => {
                     !validUsername || !validPassword || !validMatch
                       ? true
                       : false
-                  }>
+                  }
+                >
                   Sign up
                 </button>
                 <button onClick={() => setLoginType("Login")}>
