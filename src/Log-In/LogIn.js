@@ -26,8 +26,6 @@ const LogIn = (props) => {
   const [loginType, setLoginType] = useState("Login");
   const [error, setError] = useState("");
 
-  const [hash, setHash] = useState("");
-
   //Registration Handling
   useEffect(() => {
     userRef.current.focus();
@@ -55,9 +53,10 @@ const LogIn = (props) => {
       .post("/login", { username, password })
       .then((res) => {
         if (
-          res.data[0].USERNAME === username
+          res.data[0].Username === username
         ) {
           props.status(true);
+          console.log(res.data[0]);
           props.username(username);
           props.password(password);
         }

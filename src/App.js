@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import LogIn from './Log-In/LogIn';
 import Dashboard from './Dashboard/Dashboard';
-import axios from 'axios';
 
 
 function App() {
