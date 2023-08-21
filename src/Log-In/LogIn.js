@@ -25,7 +25,6 @@ const LogIn = (props) => {
 
   const [loginType, setLoginType] = useState("Login");
   const [error, setError] = useState("");
-
   //Registration Handling
   useEffect(() => {
     userRef.current.focus();
@@ -48,36 +47,31 @@ const LogIn = (props) => {
   }, [password, matchPassword]);
 
   //Backend
-  const handleLogin = (event) => {
-    axios
-      .post("/login", { username, password })
-      .then((res) => {
-        if (
-          res.data[0].Username === username
-        ) {
-          props.status(true);
-          console.log(res.data[0]);
-          props.username(username);
-          props.password(password);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status === 409) {
-          setError(
-            "Please check if the username is correct, or register an account below"
-          );
-        } else if (err.response.status === 410) {
-          setError("Wrong password");
-        } else {
-          setError("Login failed");
-        }
-      });
+  async function handleLogin(event) {
+    try {
+      const res = await axios.post("/login", { username, password });
+      if (
+        res.data[0].Username === username
+      ) {
+        props.status(true);
+        console.log(props.status)
+        console.log(res.data[0]);
+        props.username(username);
+        props.password(password);
+      }
+      console.log(res);
+      console.log(res.data);
+    }
+    catch(err) {
+      console.log(err.response.status + ": " + err.response.data);
+      console.log(err.response.status);
+      setError(err.response.status + ": " + err.response.data);
+    }
     setUsername("");
     setPassword("");
     setError("");
     event.preventDefault();
-  };
+  }
 
   const handleRegister = (event) => {
     console.log(username);
@@ -135,8 +129,8 @@ const LogIn = (props) => {
                   id="password"
                   name="password"
                 ></input>
-                <button onClick={handleLogin}>Log-in</button>
-                <button onClick={() => setLoginType("Register")}>
+                <button type="button" onClick={handleLogin}>Log-in</button>
+                <button type="button" onClick={() => setLoginType("Register")}>
                   Register
                 </button>
                 <br></br>

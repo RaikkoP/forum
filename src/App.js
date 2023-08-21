@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import LogIn from './Log-In/LogIn';
 import Dashboard from './Dashboard/Dashboard';
@@ -11,6 +11,10 @@ function App() {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
+  useEffect(() => {
+    console.log(loginStatus);
+  },[loginStatus]);
+
 
   return (
     <div>
@@ -20,7 +24,7 @@ function App() {
       username={setUsername}
       password={setPassword}></LogIn>
       )}
-    {loginStatus === true && (
+    {loginStatus && (
       <Dashboard
       username={username}
       password={password}></Dashboard>

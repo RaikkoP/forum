@@ -20,6 +20,7 @@ const storage = multer.diskStorage({
     cb(null, "./Images");
   },
   filename: (req, file, cb) => {
+    console.log(file);
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
@@ -42,10 +43,14 @@ app.get("/", (req, res) => {
 });
 
 //Get images from backend
-app.get("images", (req, res) => {});
+app.get("/images", (req, res) => {
+
+});
 
 //Send images to backend
-app.get("upload", (req, res) => {});
+app.post("/upload", upload.single('image'), (req, res) => {
+  
+});
 
 //Gather user informatio
 app.post("/userdata", (req, res) => {
@@ -71,10 +76,10 @@ app.post("/login", (req, res) => {
       ) {
         return res.json(data);
       } else {
-        return res.status(410).send();
+        return res.status(410).send('Invalid password');
       }
     } else {
-      return res.status(409).send();
+      return res.status(409).send('Invalid username');
     }
   });
 });

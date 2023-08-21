@@ -11,35 +11,44 @@ const Profile = (props) => {
     const [upvotes, setUpvotes] = useState(props.upvotes);
     const [downvotes, setDownvotes] = useState(props.downvotes);
     const [profilePic, setProfilePic] = useState(props.profilePic);
-
-    const changeToggle = (status) => {
-        console.log(username, profilePic, bio, upvotes, downvotes);
-        setToggle(status);
-    }
-
+    
     useEffect(() => {
-        axios.post('userdata', {username,password})
-        .then(
-            (res) => {
+        async function fetchData(){
+            try {
+                const res = await axios.post('userdata', {username,password});
                 setBio(res.data[0].Bio);
                 setUpvotes(res.data[0].Upvotes);
                 setDownvotes(res.data[0].Downvotes);
-        })
-        .catch(err => console.log(err))
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+        fetchData();
     }, [username, password])
+
+
+    function changeToggle(status) {
+        console.log(username, profilePic, bio, upvotes, downvotes);
+        setToggle(status);
+    };
+
+    const fileOnChange = (e) => props.image(e.target.files[0]);
 
     return (
         <div>
             {toggle === false && (
                 <button id="profile" onClick={() => changeToggle(true)}>O</button>
             )}
-            {toggle === true && (
+            {toggle && (
                 <div>
                     <div>
                         <button id="profile2" onClick={() => changeToggle(false)}>X</button>
                     </div>
                     <div className="info">
                         <img src={profilePic} alt="profile pic" />
+                        <input type="file" name='image' onChange={fileOnChange}></input>
+                        <button onClick={props.uploadFile}>Upload</button>
                         <h1>{username}</h1>
                         <h1>{bio}</h1>
                         <h1>{upvotes}</h1>
