@@ -25,6 +25,7 @@ const LogIn = (props) => {
 
   const [loginType, setLoginType] = useState("Login");
   const [error, setError] = useState("");
+
   //Registration Handling
   useEffect(() => {
     userRef.current.focus();
@@ -56,11 +57,10 @@ const LogIn = (props) => {
         props.status(true);
         props.username(username);
         props.password(password);
+        setError("");
       }
     }
     catch(err) {
-      console.log(err.response.status + ": " + err.response.data);
-      console.log(err.response.status);
       setError(err.response.status + ": " + err.response.data);
     }
     setUsername("");
@@ -68,35 +68,19 @@ const LogIn = (props) => {
     event.preventDefault();
   }
 
-  const handleRegister = (event) => {
-    console.log(username);
-    console.log(password);
+  async function handleRegister(event) {
     const hashedPassword = bcrypt.hashSync(password, 10);
-    console.log(hashedPassword);
-    axios
-      .post("/register", { username, password, hashedPassword })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status === 403) {
-          setError("Password does not meet the requirements");
-        } else if (err.response.status === 405) {
-          setError("Username does not meet the requirements");
-        } else if (err.response.status === 409) { 
-          setError("Username already exists");
-        } 
-        else {
-          setError("Problem with registration");
-        }
-      });
+    try {
+      const res = await axios.post("/register", { username, password, hashedPassword });
+    }
+    catch(err) {
+      setError(err.response.status + ": " + err.response.data);
+    }
     setUsername("");
     setPassword("");
     setMatchPassword("");
-    setError("");
     event.preventDefault();
-  };
+  }
 
   return (
     <div className="LogIn-box">
@@ -241,6 +225,7 @@ const LogIn = (props) => {
                 </p>
                 <p>{error}</p>
                 <button
+                  type="button"
                   onClick={handleRegister}
                   disabled={
                     !validUsername || !validPassword || !validMatch

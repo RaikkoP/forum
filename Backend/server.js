@@ -104,10 +104,10 @@ app.post("/register", (req, res) => {
           }
         );
       } else {
-        return res.status(405).send();
+        return res.status(405).send('Invalid username or password');
       }
     } else {
-      return res.status(409).send();
+      return res.status(409).send(['Account with same name already exists']);
     }
   });
 });
