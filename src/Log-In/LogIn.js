@@ -54,13 +54,9 @@ const LogIn = (props) => {
         res.data[0].Username === username
       ) {
         props.status(true);
-        console.log(props.status)
-        console.log(res.data[0]);
         props.username(username);
         props.password(password);
       }
-      console.log(res);
-      console.log(res.data);
     }
     catch(err) {
       console.log(err.response.status + ": " + err.response.data);
@@ -69,7 +65,6 @@ const LogIn = (props) => {
     }
     setUsername("");
     setPassword("");
-    setError("");
     event.preventDefault();
   }
 
