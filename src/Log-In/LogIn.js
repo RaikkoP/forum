@@ -72,6 +72,10 @@ const LogIn = (props) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
     try {
       const res = await axios.post("/register", { username, password, hashedPassword });
+      setLoginType("Login");
+      setUsername("");
+      setPassword("");
+      setMatchPassword("");
     }
     catch(err) {
       setError(err.response.status + ": " + err.response.data);
